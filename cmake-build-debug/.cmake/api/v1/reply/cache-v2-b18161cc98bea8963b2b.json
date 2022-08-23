@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "d:/Dev/aeds2/prova01/cmake-build-debug"
+			"value" : "d:/Dev/aeds2/prova01-aeds2/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -479,7 +479,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "D:/Dev/aeds2/prova01"
+			"value" : "D:/Dev/aeds2/prova01-aeds2"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1095,7 +1095,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Dev/aeds2/prova01/cmake-build-debug"
+			"value" : "D:/Dev/aeds2/prova01-aeds2/cmake-build-debug"
 		},
 		{
 			"name" : "prova01_IS_TOP_LEVEL",
@@ -1119,7 +1119,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Dev/aeds2/prova01"
+			"value" : "D:/Dev/aeds2/prova01-aeds2"
 		}
 	],
 	"kind" : "cache",

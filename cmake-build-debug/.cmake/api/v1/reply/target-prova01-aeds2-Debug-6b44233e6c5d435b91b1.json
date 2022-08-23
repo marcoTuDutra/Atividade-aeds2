@@ -2,10 +2,10 @@
 	"artifacts" : 
 	[
 		{
-			"path" : "prova01.exe"
+			"path" : "prova01-aeds2.exe"
 		},
 		{
-			"path" : "prova01.pdb"
+			"path" : "prova01-aeds2.pdb"
 		}
 	],
 	"backtrace" : 1,
@@ -60,7 +60,7 @@
 			]
 		}
 	],
-	"id" : "prova01::@6890427a1f51a3e7e1df",
+	"id" : "prova01-aeds2::@6890427a1f51a3e7e1df",
 	"link" : 
 	{
 		"commandFragments" : 
@@ -80,8 +80,8 @@
 		],
 		"language" : "C"
 	},
-	"name" : "prova01",
-	"nameOnDisk" : "prova01.exe",
+	"name" : "prova01-aeds2",
+	"nameOnDisk" : "prova01-aeds2.exe",
 	"paths" : 
 	{
 		"build" : ".",

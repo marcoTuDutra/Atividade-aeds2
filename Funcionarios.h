@@ -11,16 +11,23 @@ typedef struct Funcionario {
     double salario;
 } TFunc;
 
+typedef struct FuncionarioKey {
+    int cod;
+    TFunc *RRN;
+} TFuncKey;
+
 void embaralhar(TFunc *vet, int vetSize);
 
-void preencherFuncionarios(TFunc *funcionarios, int size);
+void preencherFuncionarios(FILE *arq, int size);
 
-void salvarFuncionarios(TFunc vet[], int size);
+TFunc *lerFuncionaio(FILE *arq);
 
-TFunc buscaSequencial(int cod, TFunc funcionarios[],int size);
+void salvarFuncionarios(TFunc *func, FILE *arq);
 
-TFunc buscaBinaria(int cod, TFunc funcionarios[], int size);
+TFunc *buscaSequencial(int cod, FILE *arq, int size);
 
-void keySorting(TFunc *funcionarios);
+TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size);
+
+TFuncKey *keySorting(FILE *arq, int size);
 
 #endif //PROVA01_FUNCIONARIOS_H

@@ -4,13 +4,14 @@
 #define MAX 100
 
 int main() {
-    TFunc funcionarios[MAX];
+    TFunc *funcionario;
+    TFuncKey *funcKey;
+    FILE *arq = fopen("funcionarios.bin", "wb+");
+    preencherFuncionarios(arq, MAX);
+    buscaSequencial(90, arq, MAX);
+    printf("\n---------");
 
-    preencherFuncionarios(&funcionarios, MAX);
-    salvarFuncionarios(&funcionarios, MAX);
-
-    TFunc func = buscaSequencial(99, funcionarios, MAX);
-    printf("\n---------------");
-    func = buscaBinaria(99, funcionarios, MAX);
+    funcKey = keySorting(arq, MAX);
+    funcionario = buscaBinaria(91, funcKey, MAX);
     return 0;
 }
