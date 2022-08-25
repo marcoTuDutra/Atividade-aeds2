@@ -117,7 +117,10 @@ TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, f
     return funcionario;
 }
 
-TFuncKey *keySorting(FILE *arq, int size) {
+TFuncKey *keySorting(FILE *arq, int size, float *tempoExecucao) {
+    struct timeval current_time;
+    gettimeofday(&current_time, NULL);
+
     TFuncKey *funcKey = (TFunc *) malloc(sizeof(TFunc));
     TFuncKey aux;
 
@@ -137,6 +140,7 @@ TFuncKey *keySorting(FILE *arq, int size) {
             }
         }
     }
+    *tempoExecucao = current_time.tv_usec;
     return funcKey;
 }
 

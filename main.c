@@ -8,11 +8,11 @@ int main() {
     TFuncKey *funcKey;
     int qtdComparacoes = 0;
     float tempoExecucao;
-
     FILE *arq = fopen("funcionarios.bin", "wb+");
 
     preencherFuncionarios(arq, MAX);
 
+    printf("\n>>>>>Sequencial<<<<");
     func = buscaSequencial(10, arq, MAX, &qtdComparacoes, &tempoExecucao);
     printf("\nQuntidade de comparacoes: %d", qtdComparacoes);
     printf("\nTempo de execucao em microsegundos: : %f", tempoExecucao);
@@ -23,9 +23,11 @@ int main() {
         imprimir(*func);
     }
 
-    printf("\n---------");
+    printf("\n>>>>>Key Sorting<<<<<");
+    funcKey = keySorting(arq, MAX, &tempoExecucao);
+    printf("\nTempo de execucao em microsegundos: %f", tempoExecucao);
 
-    funcKey = keySorting(arq, MAX);
+    printf("\n>>>>>Binaria<<<<<");
     func = buscaBinaria(34, funcKey, MAX, &qtdComparacoes, &tempoExecucao);
     printf("\nQuntidade de comparacoes: %d", qtdComparacoes);
     printf("\nTempo de execucao em microsegundos: : %f", tempoExecucao);
