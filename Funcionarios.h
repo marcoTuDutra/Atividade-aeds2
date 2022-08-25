@@ -26,9 +26,9 @@ void salvarFuncionarios(TFunc *func, FILE *arq);
 
 TFunc *buscaSequencial(int cod, FILE *arq, int size, int *qtdComparacoes, float *tempoExecucao);
 
-TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, float *tempoExecucao);
+TFunc *buscaBinaria(int cod, FILE *arq, int size, int *qtdComparacoes, float *tempoExecucao);
 
-TFuncKey *keySorting(FILE *arq, int size, float *tempoExecucao);
+void keySorting(FILE *arq, int size, float *tempoExecucao);
 
 void imprimir(TFunc func);
 

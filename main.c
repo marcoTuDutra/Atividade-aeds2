@@ -24,11 +24,11 @@ int main() {
     }
 
     printf("\n>>>>>Key Sorting<<<<<");
-    funcKey = keySorting(arq, MAX, &tempoExecucao);
+    keySorting(arq,MAX, &tempoExecucao);
     printf("\nTempo de execucao em microsegundos: %f", tempoExecucao);
 
     printf("\n>>>>>Binaria<<<<<");
-    func = buscaBinaria(34, funcKey, MAX, &qtdComparacoes, &tempoExecucao);
+    func = buscaBinaria(34, arq,MAX, &qtdComparacoes, &tempoExecucao);
     printf("\nQuntidade de comparacoes: %d", qtdComparacoes);
     printf("\nTempo de execucao em microsegundos: : %f", tempoExecucao);
 

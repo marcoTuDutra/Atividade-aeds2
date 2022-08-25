@@ -39,14 +39,6 @@ TFunc *lerFuncionario(FILE *arq) {
 void preencherFuncionarios(FILE *arq, int size) {
     TFunc funcionarios[100];
     for (int i = 0; i < size; ++i) {
-//        TFunc func;
-//        func.cod = i;
-//        sprintf(func.nome, "%d", i);
-//        sprintf(func.cpf, "%d", i);
-//        sprintf(func.data_nascimento, "%d", i);
-//        func.salario = i;
-//        fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
-//        salvarFuncionarios(&func, arq);
         funcionarios[i].cod = i;
         sprintf(funcionarios[i].nome, "%d", i);
         sprintf(funcionarios[i].cpf, "%d", i);
@@ -84,7 +76,7 @@ TFunc *buscaSequencial(int cod, FILE *arq, int size, int *qtdComparacoes, float 
     return funcionario;
 }
 
-TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, float *tempoExecucao) {
+TFunc *buscaBinaria(int cod, FILE *arq, int size, int *qtdComparacoes, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 
@@ -92,18 +84,22 @@ TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, f
     int inicio = 0, fim = size - 1, meio, comparacoes = 0;
     while (inicio <= fim) {
         meio = (inicio + fim) / 2;
+
+        fseek(arq, meio* sizeof(TFunc), SEEK_SET);
+        TFunc *func = lerFuncionario(arq);
+
         comparacoes++;
-        if (cod == funcKey[meio].cod) {
-            funcionario = funcKey[meio].RRN;
+        if (cod == func->cod) {
+            funcionario = func;
             break;
         }
         comparacoes++;
-        if (cod < funcKey[meio].cod) {
+        if (cod < func->cod) {
             fim = meio - 1;
             continue;
         }
         comparacoes++;
-        if (cod > funcKey[meio].cod) {
+        if (cod > func->cod) {
             inicio = meio + 1;
             continue;
         } else {
@@ -117,7 +113,7 @@ TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, f
     return funcionario;
 }
 
-TFuncKey *keySorting(FILE *arq, int size, float *tempoExecucao) {
+void keySorting(FILE *arq, int size, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 
@@ -140,8 +136,11 @@ TFuncKey *keySorting(FILE *arq, int size, float *tempoExecucao) {
             }
         }
     }
+    for (int i = 0; i < size; ++i) {
+        fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
+        salvarFuncionarios(funcKey[i].RRN, arq);
+    }
     *tempoExecucao = current_time.tv_usec;
-    return funcKey;
 }
 
 void imprimir(TFunc func) {
