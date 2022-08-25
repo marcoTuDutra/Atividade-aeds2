@@ -20,14 +20,16 @@ void embaralhar(TFunc *vet, int vetSize);
 
 void preencherFuncionarios(FILE *arq, int size);
 
-TFunc *lerFuncionaio(FILE *arq);
+TFunc *lerFuncionario(FILE *arq);
 
 void salvarFuncionarios(TFunc *func, FILE *arq);
 
-TFunc *buscaSequencial(int cod, FILE *arq, int size);
+TFunc *buscaSequencial(int cod, FILE *arq, int size, int *qtdComparacoes, float *tempoExecucao);
 
-TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size);
+TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, float *tempoExecucao);
 
 TFuncKey *keySorting(FILE *arq, int size);
+
+void imprimir(TFunc func);
 
 #endif //PROVA01_FUNCIONARIOS_H

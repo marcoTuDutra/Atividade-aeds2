@@ -20,7 +20,7 @@ void salvarFuncionarios(TFunc *func, FILE *arq) {
     fwrite(&func->salario, sizeof(double), 1, arq);
 }
 
-TFunc *lerFuncionaio(FILE *arq) {
+TFunc *lerFuncionario(FILE *arq) {
     TFunc *func = (TFunc *) malloc(sizeof(TFunc));
 
     if (0 >= fread(&func->cod, sizeof(int), 1, arq)) {
@@ -37,117 +37,113 @@ TFunc *lerFuncionaio(FILE *arq) {
 }
 
 void preencherFuncionarios(FILE *arq, int size) {
+    TFunc funcionarios[100];
     for (int i = 0; i < size; ++i) {
-        TFunc func;
-        func.cod = i;
-        sprintf(func.nome, "%d", i);
-        sprintf(func.cpf, "%d", i);
-        sprintf(func.data_nascimento, "%d", i);
-        func.salario = i;
+//        TFunc func;
+//        func.cod = i;
+//        sprintf(func.nome, "%d", i);
+//        sprintf(func.cpf, "%d", i);
+//        sprintf(func.data_nascimento, "%d", i);
+//        func.salario = i;
+//        fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
+//        salvarFuncionarios(&func, arq);
+        funcionarios[i].cod = i;
+        sprintf(funcionarios[i].nome, "%d", i);
+        sprintf(funcionarios[i].cpf, "%d", i);
+        sprintf(funcionarios[i].data_nascimento, "%d", i);
+        funcionarios[i].salario = i;
+    }
+
+    embaralhar(funcionarios, size);
+    for (int i = 0; i < size; ++i) {
         fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
-        salvarFuncionarios(&func, arq);
+        salvarFuncionarios(&funcionarios[i], arq);
     }
 }
 
-TFunc *buscaSequencial(int cod, FILE *arq, int size) {
+TFunc *buscaSequencial(int cod, FILE *arq, int size, int *qtdComparacoes, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
-    int contComparacoes = 0, achou = 0;
-    TFunc *funcionario;
+    TFunc *funcionario = NULL;
+    int comparacoes = 0;
+
 
     for (int i = 0; i < size; ++i) {
-        TFunc *func = lerFuncionaio(arq);
+        TFunc *func = lerFuncionario(arq);
         fseek(arq, i * sizeof(TFunc), SEEK_SET);
-        contComparacoes++;
+        comparacoes++;
         if (func->cod == cod) {
             funcionario = func;
-            achou = 1;
             break;
         }
     }
 
-    if (achou == 1) {
-        printf("\nFuncionario encontrado!");
-    } else {
-        printf("\nFuncionario nao encontrado!");
-    }
-    printf("\nQuantidade de comparacoes: %d", contComparacoes);
-    printf("\nTempo de execucao em microsegundos : %ld", current_time.tv_usec);
-
+    *tempoExecucao = current_time.tv_usec;
+    *qtdComparacoes = comparacoes;
+    fseek(arq, 0, SEEK_SET);
     return funcionario;
 }
 
-TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size) {
+TFunc *buscaBinaria(int cod, TFuncKey *funcKey, int size, int *qtdComparacoes, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
-    int inicio = 0, fim = size - 1, meio, controle_pesquisa = 1, contComparacoes = 0;
-    TFunc *funcionario;
 
+    TFunc *funcionario = NULL;
+    int inicio = 0, fim = size - 1, meio, comparacoes = 0;
     while (inicio <= fim) {
         meio = (inicio + fim) / 2;
-        contComparacoes++;
-
+        comparacoes++;
         if (cod == funcKey[meio].cod) {
             funcionario = funcKey[meio].RRN;
-            controle_pesquisa = 0;
             break;
         }
-        contComparacoes++;
+        comparacoes++;
         if (cod < funcKey[meio].cod) {
             fim = meio - 1;
             continue;
         }
-        contComparacoes++;
+        comparacoes++;
         if (cod > funcKey[meio].cod) {
             inicio = meio + 1;
             continue;
         } else {
-            controle_pesquisa = 1;
+            funcionario = NULL;
             break;
         }
     }
 
-    if (controle_pesquisa == 0) {
-        printf("\nFuncionario encontrado!");
-        printf("\nQuantidade de comparacoes: %d", contComparacoes);
-        printf("\nTempo de execucao em microsegundos : %ld", current_time.tv_usec);
-        printf("\nCodigo do funcionario: %d", funcionario->cod);
-        return funcionario;
-    } else {
-        printf("\nFuncionario nao encontrado!");
-        printf("\nQuantidade de comparacoes: %d", contComparacoes);
-        printf("\nTempo de execucao em microsegundos : %ld", current_time.tv_usec);
-    }
-}
-
-
-TFuncKey *ordenar(TFuncKey * funcKeys, int size) {
-    int min;
-    TFuncKey swap;
-    for (int i = 0; i > (size - 1); i++) {
-        min = i;
-        for (int j = (i + 1); j > size; j++) {
-            if (funcKeys[j].cod > funcKeys[min].cod) {
-                min = j;
-            }
-        }
-        if (i != min) {
-            swap = funcKeys[i];
-            funcKeys[i] = funcKeys[min];
-            funcKeys[min] = swap;
-        }
-    }
-    return funcKeys;
+    *tempoExecucao = current_time.tv_usec;
+    *qtdComparacoes = comparacoes;
+    return funcionario;
 }
 
 TFuncKey *keySorting(FILE *arq, int size) {
-    TFuncKey *funcKey;
+    TFuncKey *funcKey = (TFunc *) malloc(sizeof(TFunc));
+    TFuncKey aux;
+
     for (int i = 0; i < size; ++i) {
-        TFunc *func = lerFuncionaio(arq);
+        TFunc *func = lerFuncionario(arq);
         fseek(arq, i * sizeof(TFunc), SEEK_SET);
         funcKey[i].cod = func->cod;
         funcKey[i].RRN = func;
     }
-    //ordenar(&funcKey, size);
+
+    for (int i = 0; i < size; i++) {
+        for (int j = 0; j < size; j++) {
+            if (funcKey[i].cod < funcKey[j].cod) {
+                aux = funcKey[i];
+                funcKey[i] = funcKey[j];
+                funcKey[j] = aux;
+            }
+        }
+    }
     return funcKey;
+}
+
+void imprimir(TFunc func) {
+    printf("\n COD: %d", func.cod);
+    printf("\n NOME: %s", func.nome);
+    printf("\n CPF: %s", func.cpf);
+    printf("\n DTA. NASC. : %s", func.data_nascimento);
+    printf("\n SALARIO: %f", func.salario);
 }
