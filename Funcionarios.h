@@ -28,7 +28,9 @@ TFunc *buscaSequencial(int cod, FILE *arq, int size, int *qtdComparacoes, float 
 
 TFunc *buscaBinaria(int cod, FILE *arq, int size, int *qtdComparacoes, float *tempoExecucao);
 
-void keySorting(FILE *arq, int size, float *tempoExecucao);
+void keySort(FILE *arq, int size, float *tempoExecucao);
+
+void insertionSort(FILE *arq, int size, float *tempoExecucao);
 
 void imprimir(TFunc func);
 

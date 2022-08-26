@@ -113,7 +113,7 @@ TFunc *buscaBinaria(int cod, FILE *arq, int size, int *qtdComparacoes, float *te
     return funcionario;
 }
 
-void keySorting(FILE *arq, int size, float *tempoExecucao) {
+void keySort(FILE *arq, int size, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 
@@ -136,10 +136,43 @@ void keySorting(FILE *arq, int size, float *tempoExecucao) {
             }
         }
     }
+
     for (int i = 0; i < size; ++i) {
-        fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
+        fseek(arq, i  * sizeof(TFunc), SEEK_SET);
         salvarFuncionarios(funcKey[i].RRN, arq);
     }
+    *tempoExecucao = current_time.tv_usec;
+}
+
+void insertionSort(FILE *arq, int size, float *tempoExecucao){
+    struct timeval current_time;
+    gettimeofday(&current_time, NULL);
+
+    rewind(arq);
+    int i;
+
+    for(int j = 2; j <= size; j++){
+        fseek(arq, (j-1)*sizeof(TFunc), SEEK_SET);
+        TFunc *fj = lerFuncionario(arq);
+        i = j -1;
+        fseek(arq, (i-1)*sizeof(TFunc), SEEK_SET);
+        do{
+            TFunc *fi = lerFuncionario(arq);
+            if(fi->cod < fj->cod){
+                break;
+            }
+            fseek(arq, i*sizeof(TFunc), SEEK_SET);
+            salvarFuncionarios(fi, arq);
+            i = i-1;
+            fseek(arq, (i-1)*sizeof(TFunc), SEEK_SET);
+            free(fi);
+        } while(i > 0);
+        fseek(arq, i*sizeof(TFunc), SEEK_SET);
+        salvarFuncionarios(fj, arq);
+        free(fj);
+    }
+
+    fflush(arq);
     *tempoExecucao = current_time.tv_usec;
 }
 
@@ -147,6 +180,6 @@ void imprimir(TFunc func) {
     printf("\n COD: %d", func.cod);
     printf("\n NOME: %s", func.nome);
     printf("\n CPF: %s", func.cpf);
-    printf("\n DTA. NASC. : %s", func.data_nascimento);
+    printf("\n DTA. NASC.: %s", func.data_nascimento);
     printf("\n SALARIO: %f", func.salario);
 }
