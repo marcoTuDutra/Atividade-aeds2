@@ -6,7 +6,6 @@
 
 int main() {
     TFunc *func;
-    TFuncKey *funcKey;
     int qtdComparacoes = 0, cod = -1, opc = 0;
     float tempoExecucao;
     FILE *arq = fopen("funcionarios.bin", "wb+");

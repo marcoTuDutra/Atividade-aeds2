@@ -11,12 +11,6 @@ typedef struct Funcionario {
     double salario;
 } TFunc;
 
-typedef struct FuncionarioKey {
-    int cod;
-    TFunc *RRN;
-} TFuncKey;
-
-void embaralhar(TFunc *vet, int vetSize);
 
 void preencherFuncionarios(FILE *arq, int size);
 

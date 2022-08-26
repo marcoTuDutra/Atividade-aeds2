@@ -3,14 +3,6 @@
 #include <sys/time.h>
 #include "Funcionarios.h"
 
-void embaralhar(TFunc *vet, int vetSize) {
-    for (int i = 0; i < vetSize; i++) {
-        int r = rand() % vetSize;
-        TFunc temp = vet[i];
-        vet[i] = vet[r];
-        vet[r] = temp;
-    }
-}
 
 void salvarFuncionarios(TFunc *func, FILE *arq) {
     fwrite(&func->cod, sizeof(int), 1, arq);
@@ -37,18 +29,33 @@ TFunc *lerFuncionario(FILE *arq) {
 }
 
 void preencherFuncionarios(FILE *arq, int size) {
-    TFunc funcionarios[100];
-    for (int i = 0; i < size; ++i) {
-        funcionarios[i].cod = i;
-        sprintf(funcionarios[i].nome, "%d", i);
-        sprintf(funcionarios[i].cpf, "%d", i);
-        sprintf(funcionarios[i].data_nascimento, "%d", i);
-        funcionarios[i].salario = i;
-    }
 
-    embaralhar(funcionarios, size);
+    TFunc funcionarios[size];
+    int cods[size], i = 0, igual;
+    srand(time(NULL));
+    do {
+        cods[i] = rand() %size;
+        igual = 0;
+        for (int j = 0; j < i; ++j) {
+            if(cods[j] == cods[i]){
+                igual = 1;
+            }
+        }
+        if(igual == 0){
+            i++;
+        }
+
+    } while (i < size);
+
+
     for (int i = 0; i < size; ++i) {
-        fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
+        funcionarios[i].cod = cods[i];
+        sprintf(funcionarios[i].nome, "%d", cods[i]);
+        sprintf(funcionarios[i].cpf, "%d", cods[i]);
+        sprintf(funcionarios[i].data_nascimento, "%d", cods[i]);
+        funcionarios[i].salario = cods[i];
+
+        fseek(arq, i * sizeof(TFunc), SEEK_SET);
         salvarFuncionarios(&funcionarios[i], arq);
     }
 }
@@ -72,7 +79,6 @@ TFunc *buscaSequencial(int cod, FILE *arq, int size, int *qtdComparacoes, float 
 
     *tempoExecucao = current_time.tv_usec;
     *qtdComparacoes = comparacoes;
-    fseek(arq, 0, SEEK_SET);
     return funcionario;
 }
 
@@ -85,7 +91,7 @@ TFunc *buscaBinaria(int cod, FILE *arq, int size, int *qtdComparacoes, float *te
     while (inicio <= fim) {
         meio = (inicio + fim) / 2;
 
-        fseek(arq, meio* sizeof(TFunc), SEEK_SET);
+        fseek(arq, meio * sizeof(TFunc), SEEK_SET);
         TFunc *func = lerFuncionario(arq);
 
         comparacoes++;
@@ -117,57 +123,57 @@ void keySort(FILE *arq, int size, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 
-    TFuncKey *funcKey = (TFunc *) malloc(sizeof(TFunc));
-    TFuncKey aux;
+    TFunc funcs[size];
+    TFunc aux;
 
     for (int i = 0; i < size; ++i) {
-        TFunc *func = lerFuncionario(arq);
         fseek(arq, i * sizeof(TFunc), SEEK_SET);
-        funcKey[i].cod = func->cod;
-        funcKey[i].RRN = func;
+        TFunc *fj = lerFuncionario(arq);
+        funcs[i] = *fj;
     }
 
     for (int i = 0; i < size; i++) {
         for (int j = 0; j < size; j++) {
-            if (funcKey[i].cod < funcKey[j].cod) {
-                aux = funcKey[i];
-                funcKey[i] = funcKey[j];
-                funcKey[j] = aux;
+            if (funcs[i].cod < funcs[j].cod) {
+                aux = funcs[i];
+                funcs[i] = funcs[j];
+                funcs[j] = aux;
             }
         }
     }
 
     for (int i = 0; i < size; ++i) {
-        fseek(arq, i  * sizeof(TFunc), SEEK_SET);
-        salvarFuncionarios(funcKey[i].RRN, arq);
+        fseek(arq, i * sizeof(TFunc), SEEK_SET);
+        salvarFuncionarios(&funcs[i], arq);
     }
+
     *tempoExecucao = current_time.tv_usec;
 }
 
-void insertionSort(FILE *arq, int size, float *tempoExecucao){
+void insertionSort(FILE *arq, int size, float *tempoExecucao) {
     struct timeval current_time;
     gettimeofday(&current_time, NULL);
 
     rewind(arq);
     int i;
 
-    for(int j = 2; j <= size; j++){
-        fseek(arq, (j-1)*sizeof(TFunc), SEEK_SET);
+    for (int j = 2; j <= size; j++) {
+        fseek(arq, (j - 1) * sizeof(TFunc), SEEK_SET);
         TFunc *fj = lerFuncionario(arq);
-        i = j -1;
-        fseek(arq, (i-1)*sizeof(TFunc), SEEK_SET);
-        do{
+        i = j - 1;
+        fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
+        do {
             TFunc *fi = lerFuncionario(arq);
-            if(fi->cod < fj->cod){
+            if (fi->cod < fj->cod) {
                 break;
             }
-            fseek(arq, i*sizeof(TFunc), SEEK_SET);
+            fseek(arq, i * sizeof(TFunc), SEEK_SET);
             salvarFuncionarios(fi, arq);
-            i = i-1;
-            fseek(arq, (i-1)*sizeof(TFunc), SEEK_SET);
+            i = i - 1;
+            fseek(arq, (i - 1) * sizeof(TFunc), SEEK_SET);
             free(fi);
-        } while(i > 0);
-        fseek(arq, i*sizeof(TFunc), SEEK_SET);
+        } while (i > 0);
+        fseek(arq, i * sizeof(TFunc), SEEK_SET);
         salvarFuncionarios(fj, arq);
         free(fj);
     }
