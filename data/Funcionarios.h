@@ -23,4 +23,5 @@ TFunc *lerFuncionario(FILE *arq);
 void salvarFuncionarios(TFunc *func, FILE *arq);
 void imprimir(TFunc func);
 int tamanhoArquivo(FILE *arq, int contSizeFile);
+void imprimirParticaoFunc(FILE *file, char partitionName[]);
 #endif //PROVA01_FUNCIONARIOS_H

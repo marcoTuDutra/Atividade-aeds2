@@ -3,6 +3,7 @@
 #include "busca/Busca.h"
 #include "ordenacao/Ordenacao.h"
 #include "selecao/Selecao.h"
+#include "hash/Hash.h"
 #define MAX 100
 
 int main() {
@@ -12,6 +13,7 @@ int main() {
     FILE *arq = fopen("funcionarios.bin", "wb+");
     FILE *arvoreBinaria = fopen("arvoreBinaria.dat","rb+");
     preencherFuncionarios(arq,MAX);
+    gerarParicoesHash(arq,3,30);
 
     do {
         printf("\nInforme o valor do codigo do funcionario (entre 0 e 100): ");
@@ -55,9 +57,9 @@ int main() {
             break;
         case 3:
             printf("\n>>>>>Arvore Binaria de Vencedores<<<<<");
-            int numberOfPartition = 1;
-            numberOfPartition += selecaoNatural(arq);
-            arvoreBinariaVenc(numberOfPartition, &tempoExecucao);
+            int qtd = 1;
+            qtd += selecaoNatural(arq);
+            arvoreBinariaVenc(qtd, &tempoExecucao);
             FILE *arvoreBinaria = fopen("arvoreBinaria.dat","rb+");
             printf("\nTempo de execucao em microsegundos: %f", tempoExecucao);
             printf("\n ");
@@ -83,8 +85,70 @@ int main() {
     }
 
 
+    printf("\n<<<<<TABELA HASH>>>>>");
+
+    opc = 0;
+    int part;
+
+    do {
+        printf("\nEscolha um metodo: ");
+        printf("\n  1- Imprimir particao");
+        printf("\n  2- Inserir");
+        printf("\n  3- Buscar");
+        printf("\n  4- Remover");
+        printf("\n  5- Sair");
+        scanf("%d", &opc);
+
+        switch (opc) {
+            case 1:
+                printf("\n>>>>>Imprimir particao<<<<<");
+                printf("\nInforme a particao: ");
+                scanf("%d", &part);
+                imprimirParticao(part);
+                break;
+            case 2:
+                printf("\n>>>>>Inserir<<<<<");
+                TFunc funcIns;
+                int part;
+                printf("\nInforme o codigo do funcionario:  ");
+                scanf("%d", &funcIns.cod);
+                printf("\nInforme o nome do funcionario:  ");
+                scanf("%s", &funcIns.nome);
+                printf("\nInforme o cpf do funcionario:  ");
+                scanf("%s", &funcIns.cpf);
+                printf("\nInforme a data de nascimento do funcionario:  ");
+                scanf("%s", &funcIns.data_nascimento);
+                printf("\nInforme o salario do funcionario:  ");
+                scanf("%f", &funcIns.salario);
+                printf("\n-------");
+                printf("\nInforme a particao a ser inserida:  ");
+                scanf("%d", &part);
+                inserir(&funcIns, part);
+                break;
+            case 3:
+                printf("");
+                printf("\n>>>>>Buscar<<<<<");
+                printf("\nInforme o codigo do funcionario:  ");
+                scanf("%d", &cod);
+                printf("\nInforme a particao: ");
+                scanf("%d", &part);
+                imprimir(*busca(cod,part));
+                break;
+            case 4:
+
+                printf("\n>>>>>Remover<<<<<");
+                printf("\nInforme o codigo do funcionario:  ");
+                scanf("%d", &cod);
+                printf("\nInforme a particao: ");
+                scanf("%d", &part);
+                remover(cod,part);
+                break;
+        }
+    } while (opc != 5);
+
     fclose(arq);
     fclose(arvoreBinaria);
+
 
     return 0;
 

@@ -74,9 +74,7 @@ int tamanhoArquivo(FILE *arq, int contSizeFile) {
     return contSizeFile;
 }
 
-void imprimirParticao(FILE *file, char partitionName[]) {
-
-    printf("\nParticao %s: \n: ", partitionName);
+void imprimirParticaoFunc(FILE *file, char partitionName[]) {
 
     for (int i = 0; i < tamanhoArquivo(file, 0); ++i) {
 
